@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend
+  labels:
+    app: learner-report
+    component: frontend
+spec:
+  replicas: {{ .Values.replicaCount.frontend }}
+  selector:
+    matchLabels:
+      app: learner-report
+      component: frontend
+  template:
+    metadata:
+      labels:
+        app: learner-report
+        component: frontend
+    spec:
+      containers:
+      - name: frontend
+        image: "{{ .Values.image.frontend.repository }}:{{ .Values.image.frontend.tag }}"
+        imagePullPolicy: {{ .Values.image.frontend.pullPolicy }}
+        ports:
+        - containerPort: 3000
+        env:
+        - name: REACT_APP_API_BASE_URL
+          value: "http://backend-service:3000"
+        resources:
+          {{- toYaml .Values.resources.frontend | nindent 10 }}

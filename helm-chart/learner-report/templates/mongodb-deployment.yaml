@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: learner-report
+    component: mongodb
+spec:
+  replicas: {{ .Values.replicaCount.mongodb }}
+  selector:
+    matchLabels:
+      app: learner-report
+      component: mongodb
+  template:
+    metadata:
+      labels:
+        app: learner-report
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: "{{ .Values.image.mongodb.repository }}:{{ .Values.image.mongodb.tag }}"
+        imagePullPolicy: {{ .Values.image.mongodb.pullPolicy }}
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_DATABASE
+          value: "{{ .Values.mongodb.database }}"
+        resources:
+          {{- toYaml .Values.resources.mongodb | nindent 10 }}

@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  labels:
+    app: learner-report
+    component: mongodb
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: learner-report
+      component: mongodb
+  template:
+    metadata:
+      labels:
+        app: learner-report
+        component: mongodb
+    spec:
+      containers:
+      - name: mongodb
+        image: mongo:latest
+        ports:
+        - containerPort: 27017
+        env:
+        - name: MONGO_INITDB_DATABASE
+          value: "learner-report"
+        resources:
+          requests:
+            cpu: "200m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1024Mi"
